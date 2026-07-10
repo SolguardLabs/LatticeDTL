@@ -1,0 +1,9 @@
+build/
+dist/
+node_modules/
+coverage/
+*.log
+*.exe
+*.obj
+*.pdb
+vulnerability.md
