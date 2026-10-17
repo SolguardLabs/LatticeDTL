@@ -194,13 +194,21 @@ static void print_report(const LdtlRuntime *runtime,
     int ok = epoch->status == LDTL_OK && ldtl_ledger_conserves(&runtime->ledger);
     LdtlReconciliation reconciliation;
     LdtlPolicyReport policy_report;
+    LdtlTreasuryStress stress_report;
+    LdtlStressConfig stress_config =
+        strcmp(scenario, "stress") == 0 ? ldtl_stress_config_severe()
+                                         : ldtl_stress_config_operating();
 
     ldtl_reconciliation_build(&runtime->ledger, &reconciliation);
     ldtl_policy_assess_ledger(&runtime->ledger, &runtime->policy,
                               &policy_report);
+    if (ldtl_treasury_stress_build(&runtime->ledger, epoch, &stress_config,
+                                   &stress_report) != LDTL_OK) {
+        memset(&stress_report, 0, sizeof(stress_report));
+    }
 
     fputs("{\n", out);
-    fputs("  \"lab\":\"LatticeDTL\",\n", out);
+    fputs("  \"protocol\":\"LatticeDTL\",\n", out);
     fprintf(out, "  \"scenario\":");
     ldtl_json_string(out, scenario);
     fputs(",\n", out);
@@ -213,6 +221,7 @@ static void print_report(const LdtlRuntime *runtime,
     ldtl_policy_print_json(&policy_report, &runtime->policy,
                            &runtime->policy_check, &runtime->ledger,
                            &runtime->registry, out);
+    ldtl_treasury_stress_print_json(&stress_report, &runtime->registry, out);
     ldtl_matrix_print_json(&runtime->matrix, out);
     ldtl_epoch_result_print_json(epoch, out);
     ldtl_withdrawals_print_json(&runtime->withdrawals, out);
@@ -462,6 +471,9 @@ int ldtl_runtime_run_scenario(const char *scenario, FILE *out) {
     if (strcmp(scenario, "policy") == 0) {
         return run_policy(out);
     }
+    if (strcmp(scenario, "stress") == 0) {
+        return run_settlement_scenario("stress", add_batch_debts, out);
+    }
     return (int)expect_ok(LDTL_ERR_NOT_FOUND);
 }
 
@@ -478,5 +490,6 @@ void ldtl_runtime_print_help(FILE *out) {
     fputs("  withdrawal  direct vault withdrawal report\n", out);
     fputs("  batch       mixed epoch and withdrawal report\n", out);
     fputs("  snapshot    fixture metadata report\n", out);
-    fputs("  policy      operational policy report\n", out);
+    fputs("  policy      account and withdrawal policy report\n", out);
+    fputs("  stress      severe treasury liquidity report\n", out);
 }

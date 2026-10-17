@@ -3,6 +3,7 @@
 
 #include "epoch_netting.h"
 #include "policy.h"
+#include "treasury_stress.h"
 #include "withdrawals.h"
 
 typedef struct LdtlFixtureIds {

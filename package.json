@@ -1,15 +1,22 @@
 {
-  "name": "lattice-dtl",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "node scripts/build.mjs",
-    "test": "node --test \"tests/node/*.test.js\"",
-    "test:all": "npm run build && npm test",
-    "ci": "node scripts/build.mjs && node --test \"tests/node/*.test.js\""
-  },
-  "engines": {
-    "node": ">=20"
-  }
+    "name": "lattice-dtl",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "node scripts/build.mjs",
+        "test": "node --test \"tests/node/*.test.js\"",
+        "test:all": "npm run build && npm test && npm run check:public",
+        "ci": "npm run format:check && npm run build && node scripts/check-js.mjs && npm test && npm run check:public",
+        "format": "prettier --write --config .prettierrc --ignore-path .prettierignore \"**/*.{js,mjs,json,md,yml,yaml}\"",
+        "format:check": "prettier --check --config .prettierrc --ignore-path .prettierignore \"**/*.{js,mjs,json,md,yml,yaml}\"",
+        "check:public": "node scripts/public-surface.mjs",
+        "check:release": "node scripts/release-integrity.mjs"
+    },
+    "devDependencies": {
+        "prettier": "^3.8.3"
+    },
+    "engines": {
+        "node": ">=24"
+    }
 }
