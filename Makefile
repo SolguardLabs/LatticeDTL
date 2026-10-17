@@ -11,6 +11,7 @@ SOURCES := \
 	src/withdrawals.c \
 	src/reconciliation.c \
 	src/policy.c \
+	src/treasury_stress.c \
 	src/runtime.c \
 	src/main.c
 

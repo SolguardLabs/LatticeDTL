@@ -1,11 +1,11 @@
-# Architecture Notes
+# Arquitectura y límites
 
 Este documento describe la arquitectura publica de LatticeDTL para facilitar una
 revision tecnica sin depender de contexto externo.
 
 ## Objetivos Del Modelo
 
-LatticeDTL simula una red de liquidacion con:
+LatticeDTL opera una red de liquidación con:
 
 - multiples activos;
 - cuentas con dominios operativos;
@@ -208,7 +208,7 @@ Los escenarios normales esperan:
 - importes enteros sin coma flotante;
 - JSON parseable por Node.js.
 
-## Extension Del Lab
+## Extensión del protocolo
 
 Para agregar un escenario nuevo:
 
